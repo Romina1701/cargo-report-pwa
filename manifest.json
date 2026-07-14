@@ -1,0 +1,25 @@
+{
+  "name": "貨物入庫報告書アプリ",
+  "short_name": "入庫報告書",
+  "description": "端末上で貨物入庫情報を入力し、写真付きPDFを作成する業務用アプリ",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#eef1f5",
+  "theme_color": "#1456b8",
+  "icons": [
+    {
+      "src": "./icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
