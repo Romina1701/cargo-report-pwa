@@ -1459,7 +1459,7 @@ input[id^="no"] {
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="入庫報告書">
-<link rel="apple-touch-icon" href="./icon-192.PNG">
+<link rel="apple-touch-icon" href="./icon-192.png">
 
 </head>
 <body>
@@ -1564,6 +1564,7 @@ input[id^="no"] {
 
 <div class="action-area">
 <button type="button" onclick="showPdfGuide()">PDFを作成 / 共有</button>
+<button type="button" class="red" onclick="resetFormAll()">入力内容をリセット</button>
   <p class="small">入力が終わったら、ここからPDFを作成して共有できます。入力内容はPDF作成時に自動反映されます。</p>
 </div>
 </div>
@@ -2206,6 +2207,107 @@ if ("serviceWorker" in navigator) {
       console.error("Service Worker registration failed:", err);
     });
   });
+}
+</script>
+
+
+<script>
+/* ===== 入力内容の全リセット ===== */
+function resetFormAll(){
+  if(!confirm("入力内容と写真をすべてリセットしますか？")) return;
+
+  // 基本情報
+  var ids = [
+    "staff",
+    "xrayDate",
+    "xrayResult",
+    "shipper",
+    "mawb",
+    "hawb"
+  ];
+
+  ids.forEach(function(id){
+    var el = document.getElementById(id);
+    if(el) el.value = "";
+  });
+
+  // 代理店
+  var agentSelect = document.getElementById("agentSelect");
+  if(agentSelect){
+    agentSelect.value = "";
+  }
+
+  if(typeof selectedAgentIndex !== "undefined"){
+    selectedAgentIndex = -1;
+  }
+
+  var agentCode = document.getElementById("agentCode");
+  if(agentCode) agentCode.value = "";
+
+  var inboundNo = document.getElementById("inboundNo");
+  if(inboundNo) inboundNo.value = "";
+
+  // X-RAY時刻
+  var hour = document.getElementById("xrayHour");
+  var minute = document.getElementById("xrayMinute");
+  if(hour) hour.value = "00";
+  if(minute) minute.value = "00";
+
+  var xrayText = document.getElementById("xrayAtText");
+  if(xrayText) xrayText.value = "";
+
+  // 作成日時は現在時刻に更新
+  if(typeof currentDate !== "undefined"){
+    currentDate = new Date();
+  }
+
+  var createdAt = document.getElementById("createdAtText");
+  if(createdAt && typeof makeDateText === "function"){
+    createdAt.value = makeDateText(new Date());
+  }
+
+  // 明細を初期化
+  var itemsRoot = document.getElementById("items");
+  if(itemsRoot){
+    itemsRoot.innerHTML = "";
+  }
+
+  if(typeof itemCount !== "undefined"){
+    itemCount = 0;
+  }
+
+  if(typeof addItem === "function"){
+    addItem("","","","","","","カートン","");
+  }
+
+  // 写真をすべて削除
+  for(var i = 1; i <= 6; i++){
+    var input = document.getElementById("photo" + i);
+    var status = document.getElementById("photoStatus" + i);
+    var slot = document.getElementById("photoSlot" + i);
+
+    if(input) input.value = "";
+    if(status) status.innerText = "";
+    if(slot) slot.innerHTML = "";
+  }
+
+  // 帳票表示を更新
+  if(typeof updateReport === "function"){
+    updateReport();
+  }
+
+  // QR・バーコードを空にする
+  var qr = document.getElementById("qrImg");
+  if(qr) qr.removeAttribute("src");
+
+  var barcode = document.getElementById("barcodeSvg");
+  if(barcode) barcode.innerHTML = "";
+
+  var barcodeText = document.getElementById("outBarcode");
+  if(barcodeText) barcodeText.innerText = "";
+
+  // 画面上部へ戻す
+  window.scrollTo({ top: 0, behavior: "smooth" });
 }
 </script>
 
